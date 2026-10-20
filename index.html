@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Défis & Concours Zappy</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#4a0a18;--bg2:#2a0510;--card:rgba(255,255,255,.07);--text:#fff;--muted:#e8c9d0;--line:rgba(255,255,255,.18);--gold:#f6c850;--primary:#a3122f;--ok:#7ee0a0;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;min-height:100%;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;background:radial-gradient(ellipse at 50% -10%,#8c1a35 0%,var(--bg) 45%,var(--bg2) 100%) fixed}
+#stars{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+#stars span{position:absolute;color:var(--gold);animation:tw 3s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.15;transform:scale(.7)}50%{opacity:.9;transform:scale(1.15)}}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:20px 16px 40px}
+.panel,.banner,.ch{background:var(--card);border:1px solid var(--line);border-radius:16px;backdrop-filter:blur(6px)}
+.banner{padding:20px;display:flex;flex-wrap:wrap;gap:16px;justify-content:space-between;align-items:center;margin-bottom:24px}
+h1{font-size:1.6rem;margin:0 0 4px;letter-spacing:.5px}h1 b,h2 b{color:var(--gold)}h2{font-size:1.2rem;margin:0}h3{margin:0 0 6px;font-size:1.05rem}
+.muted{color:var(--muted);font-size:.9rem;margin:0}
+.right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pts{background:linear-gradient(135deg,#f6c850,#e2a21c);color:#4a0a18;font-weight:800;padding:8px 16px;border-radius:99px;font-size:1.05rem}
+.btn{display:inline-block;border:0;cursor:pointer;font:inherit;font-weight:700;text-decoration:none;text-align:center;padding:10px 16px;border-radius:10px;background:linear-gradient(135deg,#c0183b,#8c1230);color:#fff;border:1px solid rgba(255,255,255,.25)}
+.btn.ghost{background:transparent}.btn.block{display:block;width:100%}
+input{font:inherit;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:rgba(0,0,0,.3);color:#fff;width:100%;margin-bottom:12px}
+input::placeholder{color:#c9a0aa}
+label{font-size:.85rem;color:var(--muted);display:block;margin-bottom:4px}
+.layout{display:grid;grid-template-columns:2fr 1fr;gap:24px}
+@media(max-width:800px){.layout{grid-template-columns:1fr}}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.arrows{display:flex;gap:8px}.arrows button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:#fff;cursor:pointer}
+#slider{display:flex;gap:16px;overflow-x:auto;scroll-behavior:smooth;padding-bottom:12px;scroll-snap-type:x mandatory}
+.ch{flex:0 0 250px;scroll-snap-align:start;border-top:4px solid var(--gold);padding:16px;display:flex;flex-direction:column;transition:all .4s}
+.ch.out{opacity:0;transform:scale(.85)}
+.ch .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.badge{background:var(--gold);color:#4a0a18;font-weight:800;border-radius:99px;padding:2px 10px;font-size:.85rem}
+.ch p{flex:1}
+.panel{padding:16px}
+.hist{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line);font-size:.9rem}
+.hist small{color:var(--muted);display:block}
+.done{display:none;padding:20px;text-align:center}
+#gate{max-width:420px;margin:40px auto}#gate .panel{padding:24px}
+#err{color:#ffb3c0;font-size:.9rem;min-height:1.3em;margin:0 0 10px}
+#app{display:none}
+#admin{display:none;margin-top:24px;border-color:var(--gold)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line)}th{color:var(--muted)}.ov{overflow-x:auto}
+.q{margin:14px 0}.ql{font-weight:700;margin-bottom:8px}.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:inherit;cursor:pointer;padding:8px 16px;border-radius:99px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:#fff}
+.opt.on{background:linear-gradient(135deg,#f6c850,#e2a21c);color:#4a0a18;font-weight:800;border-color:transparent}
+.opt:disabled{cursor:default;opacity:.8}#bmsg{margin:8px 0 0;font-size:.9rem;color:var(--gold)}
+@keyframes pop{0%{transform:scale(1)}30%{transform:scale(1.18) rotate(-6deg)}60%{transform:scale(.95) rotate(4deg)}100%{transform:scale(1)}}#meme.pop{animation:pop .35s ease}
+.nav{display:flex;gap:10px;margin-bottom:20px}.nav .btn{flex:1}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:24px}@media(max-width:800px){.two{grid-template-columns:1fr}}
+.rk{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;border-bottom:1px solid var(--line)}
+.rk .pos{width:34px;font-weight:800;color:var(--gold)}.rk .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rk.me{background:rgba(246,200,80,.18);border:1px solid var(--gold)}
+.opt.win,.opt.win:disabled{background:linear-gradient(135deg,#ffe08a,#f6c850 50%,#e2a21c);color:#4a0a18;font-weight:800;border-color:transparent;opacity:1;box-shadow:0 0 16px rgba(246,200,80,.85)}.opt.lose,.opt.lose:disabled{opacity:.4}.res{font-weight:800;font-size:1.05rem;display:inline-block;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25)}.res.ok{color:var(--gold);border-color:var(--gold);background:rgba(246,200,80,.12)}
+.nav{flex-wrap:wrap}.nav .btn{flex:1 1 120px}
+.dot{display:none;width:10px;height:10px;border-radius:50%;background:#ffd400;margin-left:8px;vertical-align:middle;box-shadow:0 0 8px #ffd400;animation:bl 1s infinite}.dot.on{display:inline-block}@keyframes bl{50%{opacity:.15}}
+.grid16{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}@media(max-width:600px){.grid16{grid-template-columns:repeat(3,1fr)}}
+.stu{font:inherit;color:#fff;background:rgba(0,0,0,.25);border:2px solid var(--line);border-radius:14px;padding:6px;cursor:pointer;display:flex;flex-direction:column;gap:4px}
+.stu.on{border-color:var(--gold);box-shadow:0 0 12px rgba(246,200,80,.6)}.stu.on .sn:before{content:"✓ "}.stu:disabled{cursor:default;color:#fff;opacity:1}
+.stu.win{border-color:var(--gold);background:rgba(246,200,80,.2)}.stu.lose,.stu.lose:disabled{opacity:.45}
+.pv{color:#ffd400;font-weight:800;font-size:.8rem;text-align:center}.sn{font-size:.8rem;text-align:center}
+.pic{position:relative;aspect-ratio:1;border-radius:10px;background:rgba(255,255,255,.08);overflow:hidden;display:flex;align-items:center;justify-content:center}
+.pic span{font-size:1.6rem;font-weight:800;color:var(--muted)}.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.qopt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:#fff;font:inherit;cursor:pointer}
+.qopt:disabled{cursor:default;color:#fff;opacity:1}.qopt.good,.qopt.good:disabled{background:#1f8a4c;border-color:#3be384}.qopt.bad,.qopt.bad:disabled{background:#b3202f;border-color:#ff6b7a}
+.tbar{height:8px;border-radius:99px;background:rgba(255,255,255,.15);overflow:hidden}#tfill{height:100%;width:100%;background:linear-gradient(90deg,#f6c850,#ff9d00);transition:width .2s linear}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div class="wrap">
+
+  <div id="gate">
+    <div class="panel">
+      <h1 style="text-align:center">⭐ <b>Zappy</b> TV ⭐</h1>
+      <p class="muted" style="text-align:center;margin-bottom:18px">Inscris-toi pour accéder aux défis et cumuler des étoiles.</p>
+      <div id="gform">
+        <div style="display:flex;gap:8px;margin-bottom:14px"><button class="btn block" id="tab-in">Inscription</button><button class="btn ghost block" id="tab-lo">Connexion</button></div>
+        <div id="row-user"><label for="f-user">Nom d'utilisateur (unique)</label>
+        <input id="f-user" maxlength="20" placeholder="ex : star_2026" autocomplete="username"></div>
+        <label for="f-mail">Adresse e-mail (unique)</label>
+        <input id="f-mail" type="email" placeholder="toi@exemple.com" autocomplete="email">
+        <label id="consent" style="display:flex;gap:8px;align-items:flex-start;font-size:.8rem"><input id="f-ok" type="checkbox" style="width:auto;margin:3px 0 0"><span>J'accepte que mon nom d'utilisateur et mon e-mail soient utilisés pour le concours Zappy TV. Mon e-mail n'est jamais affiché publiquement.</span></label>
+        <p id="err"></p>
+        <button class="btn block" id="go">Créer mon compte</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="app">
+    <div class="banner">
+      <div>
+        <h1>⭐ Défis &amp; Concours <b>Zappy</b></h1>
+        <p class="muted">Relevez les défis pour cumuler des points et tenter de gagner !</p>
+      </div>
+      <div class="right"><span class="pts">⭐ <span id="pts">0</span> points</span><span style="font-weight:700">👋 <span id="uname"></span></span><button class="btn ghost" id="logout">Déconnexion</button></div>
+    </div>
+    <div class="nav"><button class="btn" id="nav-d" type="button">🎯 Défis<i class="dot" id="dot-d"></i></button><button class="btn ghost" id="nav-p" type="button">🎲 Paris<i class="dot" id="dot-p"></i></button><button class="btn ghost" id="nav-q" type="button">❓ Questions<i class="dot" id="dot-q"></i></button><button class="btn ghost" id="nav-r" type="button">🏆 Classement</button></div>
+    <div id="page-defis">
+    <div class="layout">
+      <section>
+        <div class="head">
+          <div><h2>Défis à relever</h2><p class="muted">Faites défiler pour découvrir tous les défis</p></div>
+          <div class="arrows"><button id="left" aria-label="Précédent">◀</button><button id="right" aria-label="Suivant">▶</button></div>
+        </div>
+        <div id="slider"></div>
+        <div id="done" class="panel done"><h3>🎉 Bravo ! Tous les défis sont terminés !</h3><p class="muted">Vos points sont bien enregistrés.</p></div>
+      </section>
+      <aside class="panel">
+        <h2 style="margin-bottom:8px">📜 Historique de mes points</h2>
+        <p id="empty" class="muted">Aucun défi validé pour le moment.</p>
+        <div id="hist"></div>
+      </aside>
+    </div>
+    <section class="panel" style="margin-top:24px;text-align:center"><p class="muted" style="margin-bottom:8px">Clique sur le mème 🔊</p>
+      <button id="meme" type="button" aria-label="Mème sonore" style="background:none;border:0;cursor:pointer;padding:0"><img id="memeimg" src="sticker.png" alt="Mème" style="max-width:200px;max-height:200px"><span id="memefb" style="display:none;font-size:90px;line-height:1">😂</span></button></section>
+    </div>
+    <div id="page-paris" style="display:none">
+    <section id="bets" class="panel" style="margin-bottom:24px"><h2>🎲 Paris : gagne jusqu'à 100 points</h2><div id="bets-body"></div><p id="bmsg"></p></section>
+    <section id="bets2" class="panel"><h2>🎲 Paris de la saison</h2><p class="muted" style="margin-bottom:14px">Clique sur les photos pour choisir. Plus tu valides tôt, plus chaque bon choix rapporte de points.</p><div id="bets2-body"></div></section>
+    </div>
+    <div id="page-quiz" style="display:none"><section class="panel" id="quiz-box"></section></div>
+    <div id="page-rank" style="display:none">
+      <p class="muted" id="lb-info" style="margin-bottom:12px"></p>
+      <div class="two">
+        <section class="panel"><h2>📅 Classement de la semaine</h2><p class="muted" id="wk-sub" style="margin-bottom:10px">Top 20 · remis à zéro chaque samedi à 23h30</p><div id="lb-week"></div><p id="me-week" class="muted" style="margin-top:10px"></p></section>
+        <section class="panel"><h2>🏆 Classement saison</h2><p class="muted" style="margin-bottom:10px">Top 20 · total des points de la saison</p><div id="lb-season"></div><p id="me-season" class="muted" style="margin-top:10px"></p></section>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+var CH=[
+ {id:"defi-1",name:"Rejoindre TikTok",tag:"TikTok",pts:50,txt:"Abonnez-vous à notre compte TikTok officiel pour remporter 50 points.",url:"https://www.tiktok.com/@_zappy.tv",cta:"Abonne-toi"},
+ {id:"defi-2",name:"Suivre sur Instagram",tag:"Instagram",pts:50,txt:"Découvrez nos stories et les coulisses du programme pour remporter 50 points.",url:"https://www.instagram.com/_zappy.tv",cta:"Abonne-toi"},
+ {id:"defi-3",name:"Page Facebook",tag:"Facebook",pts:50,txt:"Rejoignez notre communauté sur Facebook pour gagner 50 points.",url:"https://www.facebook.com/p/Staracpromo2024-61567288072427/",cta:"Abonne-toi"},
+ {id:"defi-5",name:"Cote de popularité",tag:"Sondage",pts:30,txt:"Vote pour ton élève préféré et gagne 30 points.",url:"https://pollforall.com/pkxz44px",cta:"Votez maintenant !"}
+];
+var SB_URL="https://gsjowbqoeggbqzmfjgir.supabase.co",SB_KEY="sb_publishable_HckkWBtpafuk_ffk3ipYSw_B3K3cJK4";
+var sb=supabase.createClient(SB_URL,SB_KEY),mode="in",token="",user="",profile={points:0,completed:[],history:[]};
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
+function apply(d){token=d.token;user=d.username;profile={points:d.points||0,completed:d.completed||[],history:d.history||[]}}
+function $(i){return document.getElementById(i)}
+(function(){var s=$("stars");for(var i=0;i<45;i++){var e=document.createElement("span");e.textContent="★";e.style.left=Math.random()*100+"%";e.style.top=Math.random()*100+"%";e.style.fontSize=(8+Math.random()*16)+"px";e.style.animationDelay=(Math.random()*3)+"s";e.style.animationDuration=(2+Math.random()*3)+"s";s.appendChild(e)}})();
+function render(){
+ $("pts").textContent=profile.points;$("uname").textContent=user;
+ var s=$("slider"),left=CH.filter(function(c){return profile.completed.indexOf(c.id)<0});s.innerHTML="";
+ left.forEach(function(c){
+  var d=document.createElement("div");d.className="ch";
+  if(c.opens&&srvNow()<new Date(c.opens)){
+   d.innerHTML='<div class="top"><span class="badge">+'+c.pts+' pts</span><span class="muted">'+c.tag+'</span></div><h3>'+c.name+'</h3><p class="muted">'+c.txt+'</p><button class="btn block" disabled style="opacity:.6;cursor:not-allowed">🔒 Bientôt disponible</button><p class="muted" style="margin:8px 0 0;text-align:center" id="cd-'+c.id+'"></p>';
+   s.appendChild(d);return}
+  d.innerHTML='<div class="top<span class="badge">+'+c.pts+' pts</span><span class="muted">'+c.tag+'</span></div><h3>'+c.name+'</h3><p class="muted">'+c.txt+'</p><a class="btn block" target="_blank" rel="noopener" href="'+c.url+'">'+c.cta+'</a>';
+  d.querySelector("a").onclick=function(){
+   d.classList.add("out");
+   sb.rpc("claim",{p_token:token,p_challenge:c.id}).then(function(r){if(r.data&&!r.data.error)apply(r.data);setTimeout(render,400)})};
+  s.appendChild(d)});
+ var all=!left.length;s.style.display=all?"none":"flex";$("done").style.display=all?"block":"none";
+ var h=$("hist");h.innerHTML="";$("empty").style.display=profile.history.length?"none":"block";
+ profile.history.forEach(function(i){var e=document.createElement("div");e.className="hist";
+  var a=document.createElement("div"),sm=document.createElement("small");a.textContent=i.name;sm.textContent=i.date;a.appendChild(sm);
+  var b=document.createElement("span");b.className="badge";b.textContent="+"+i.points+" pts";e.appendChild(a);e.appendChild(b);h.appendChild(e)});
+}
+function enter(){$("gate").style.display="none";$("app").style.display="block";render();loadBets();loadQuizStatus();if(!window._tk)window._tk=setInterval(function(){tick();tickCh();tick2();updateDots()},1000)}
+function setMode(m){mode=m;$("consent").style.display=m==="in"?"flex":"none";$("go").textContent=m==="in"?"Créer mon compte":"Me connecter";$("tab-in").className="btn block"+(m==="in"?"":" ghost");$("tab-lo").className="btn block"+(m==="lo"?"":" ghost");$("err").textContent=""}
+$("tab-in").onclick=function(){setMode("in")};$("tab-lo").onclick=function(){setMode("lo")};
+$("go").onclick=async function(){
+ var n=$("f-user").value.trim(),e=$("f-mail").value.trim(),er=$("err");er.textContent="";
+ if(!/^[A-Za-z0-9_.-]{3,20}$/.test(n)){er.textContent="Nom d'utilisateur : 3 à 20 caractères (lettres, chiffres, _ . -).";return}
+ if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)){er.textContent="Adresse e-mail invalide.";return}
+ if(mode==="in"&&!$("f-ok").checked){er.textContent="Merci de cocher la case d'acceptation.";return}
+ $("go").disabled=true;
+ try{
+  var r=await sb.rpc(mode==="in"?"register":"login",{p_username:n,p_email:e});
+  if(r.error||!r.data)throw new Error("rpc");
+  var d=r.data;
+  if(d.error){er.textContent={username:"Ce nom d'utilisateur est déjà pris.",email:"Cette adresse e-mail est déjà utilisée.",notfound:"Nom d'utilisateur et e-mail ne correspondent à aucun compte.",invalid:"Informations invalides."}[d.error]||"Erreur.";return}
+  ls("zappy_token",d.token);apply(d);enter();
+ }catch(x){er.textContent="Erreur de connexion, réessaie."}
+ finally{$("go").disabled=false}};
+$("logout").onclick=function(){ls("zappy_token",null);location.reload()};
+$("left").onclick=function(){$("slider").scrollBy({left:-270,behavior:"smooth"})};
+$("right").onclick=function(){$("slider").scrollBy({left:270,behavior:"smooth"})};
+(async function(){var t=ls("zappy_token");if(!t)return;
+ try{var r=await sb.rpc("get_profile",{p_token:t});if(r.data&&!r.data.error){apply(r.data);enter()}else ls("zappy_token",null)}catch(e){}})();
+
+function tickCh(){CH.forEach(function(c){if(!c.opens)return;var el=$("cd-"+c.id);if(!el)return;
+ var sec=Math.floor((new Date(c.opens)-srvNow())/1000);
+ if(sec<=0){render();return}
+ var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),x=sec%60;
+ el.textContent="Ouverture dans "+(h?h+" h ":"")+m+" min "+x+" s ("+new Date(c.opens).toLocaleString("fr-FR",{weekday:"long",hour:"2-digit",minute:"2-digit"})+")"})}
+var betData=null,skew=0,sel={},lastSt={};
+function srvNow(){return Date.now()+skew}
+var HIDE_AT="2026-10-18T17:00:00+02:00";
+function hideBets(){var e=$("bets");if(e)e.style.display=srvNow()>=new Date(HIDE_AT)?"none":"block"}
+function val(b,t){var f=(t-new Date(b.opens_at))/(new Date(b.closes_at)-new Date(b.opens_at));f=Math.max(0,Math.min(1,f));return Math.round(b.max-(b.max-b.min)*f)}
+function stOf(b){var n=srvNow();return n<new Date(b.opens_at)?"soon":(n>=new Date(b.closes_at)?"closed":"open")}
+function fmt(d){return new Date(d).toLocaleString("fr-FR",{weekday:"long",day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"})}
+function qStatus(b,q){var st=stOf(b);
+ if(q.correct){if(q.choice&&q.choice===q.correct)return"🎉 Félicitations, vous avez bien parié et gagné "+q.awarded+" points !";return q.choice?"Malheureusement vous avez perdu, tentez votre chance la prochaine fois.":"Vous n'avez pas participé à ce pari, tentez votre chance la prochaine fois."}
+ if(q.choice){var t="Prono enregistré : "+q.choice+" — il vaut "+val(b,new Date(q.picked_at))+" pts si c'est la bonne réponse.";
+  if(st==="open")t+=" Si tu le changes maintenant, il vaudra "+val(b,srvNow())+" pts.";
+  if(st==="closed")t+=" (verrouillé)";return t}
+ return st==="open"?"Pas encore de prono.":(st==="closed"?"Aucun prono enregistré.":"")}
+function renderBets(){
+ if(!betData)return;hideBets();var box=$("bets-body");box.innerHTML="";
+ betData.bets.filter(function(b){return b.id==="semaine-1"}).forEach(function(b){var st=stOf(b);lastSt[b.id]=st;
+  var t=document.createElement("h3");t.textContent=b.title;box.appendChild(t);
+  var info=document.createElement("p");info.className="muted";info.id="binfo-"+b.id;box.appendChild(info);
+  b.questions.forEach(function(q){
+   if(!(q.id in sel))sel[q.id]=q.choice||"";
+   var qd=document.createElement("div");qd.className="q";
+   var l=document.createElement("div");l.className="ql";l.textContent=q.label;qd.appendChild(l);
+   var row=document.createElement("div");row.className="opts";
+   q.options.forEach(function(o){var bt=document.createElement("button");bt.type="button";bt.className="opt"+(q.correct?(o===q.correct?" win":" lose"):(sel[q.id]===o?" on":""));bt.textContent=(q.correct&&o===q.correct?"🏆 ":"")+o;bt.disabled=st!=="open";
+    bt.onclick=function(){sel[q.id]=o;renderBets()};row.appendChild(bt)});
+   qd.appendChild(row);
+   var m=document.createElement("p");m.className=q.correct?("res"+(q.choice&&q.choice===q.correct?" ok":"")):"muted";m.style.marginTop="6px";m.textContent=qStatus(b,q);qd.appendChild(m);box.appendChild(qd)});
+  if(st==="open"){var sv=document.createElement("button");sv.className="btn";sv.textContent="Enregistrer mes pronos";sv.onclick=function(){saveBets(b)};box.appendChild(sv)}
+ });tick()}
+function tick(){if(!betData)return;hideBets();
+ betData.bets.forEach(function(b){var st=stOf(b);if(lastSt[b.id]&&lastSt[b.id]!==st){lastSt[b.id]=st;loadBets();return}
+  var el=$("binfo-"+b.id);if(!el)return;
+  if(st==="soon"){var s0=Math.max(0,Math.floor((new Date(b.opens_at)-srvNow())/1000)),h0=Math.floor(s0/3600),m0=Math.floor(s0%3600/60),x0=s0%60;
+   el.textContent="🔒 Bientôt disponible · ouverture dans "+(h0?h0+" h ":"")+m0+" min "+x0+" s ("+fmt(b.opens_at)+"). Fin des votes "+fmt(b.closes_at)+"."}
+  else if(st==="open"){var s=Math.max(0,Math.floor((new Date(b.closes_at)-srvNow())/1000)),h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;
+   el.textContent="⏳ Fin des votes dans "+h+" h "+m+" min "+x+" s · Un prono enregistré maintenant vaut "+val(b,srvNow())+" pts, et cette valeur baisse avec le temps. Tu peux modifier jusqu'à la fin, mais le dernier enregistrement compte."}
+  else el.textContent=b.questions.every(function(q){return q.correct})?"Résultats publiés.":"Votes clos. Les points seront ajoutés dès la publication des bonnes réponses."})}
+async function loadBets(){try{var r=await sb.rpc("get_bets",{p_token:token});if(r.data&&!r.data.error){betData=r.data;skew=new Date(r.data.now)-Date.now();
+ var RESULTS={"s1-top3":"Amel"};
+ betData.bets.forEach(function(b){b.questions.forEach(function(q){
+  if(!q.correct&&RESULTS[q.id]&&new Date(r.data.now)>=new Date(b.closes_at)){q.correct=RESULTS[q.id];
+   if(q.choice===q.correct&&!q.awarded)q.awarded=val(b,new Date(q.picked_at))}})});
+ renderBets();renderBets2()}
+ var p=await sb.rpc("get_profile",{p_token:token});if(p.data&&!p.data.error){apply(p.data);render()}}catch(e){}}
+async function saveBets(b){var msg=$("bmsg");msg.textContent="";var n=0;
+ try{for(var i=0;i<b.questions.length;i++){var q=b.questions[i];
+   if(sel[q.id]&&sel[q.id]!==q.choice){var r=await sb.rpc("save_pick",{p_token:token,p_question:q.id,p_choice:sel[q.id]});
+    if(r.error||!r.data||r.data.error){msg.textContent=(r.data&&r.data.error==="closed")?"Les votes sont clos.":"Erreur, réessaie.";await loadBets();return}n++}}
+  msg.textContent=n?"✅ Pronos enregistrés !":"Aucun changement à enregistrer.";await loadBets()}catch(e){msg.textContent="Erreur, réessaie."}}
+
+var lastSnd=0,curAudio=null,im=$("memeimg");
+function memeFb(){im.style.display="none";$("memefb").style.display="inline"}
+if(im.complete&&im.naturalWidth===0)memeFb();im.onerror=memeFb;
+$("meme").onclick=function(){var n;do{n=1+Math.floor(Math.random()*11)}while(n===lastSnd);lastSnd=n;
+ if(curAudio){try{curAudio.pause()}catch(e){}}
+ curAudio=new Audio(n+".mp3");curAudio.play().catch(function(){});
+ var el=this;el.classList.remove("pop");void el.offsetWidth;el.classList.add("pop")};
+
+var lbTimer=null;
+var PAGES={d:"defis",p:"paris",q:"quiz",r:"rank"};
+function showPage(k){Object.keys(PAGES).forEach(function(x){$("page-"+PAGES[x]).style.display=x===k?"block":"none";$("nav-"+x).className="btn"+(x===k?"":" ghost")});
+ if(lbTimer){clearInterval(lbTimer);lbTimer=null}
+ if(k==="r"){loadLb();lbTimer=setInterval(loadLb,10000)}
+ if(k==="q")loadQuiz()}
+Object.keys(PAGES).forEach(function(x){$("nav-"+x).onclick=function(){showPage(x)}});
+async function loadLb(){try{var r=await sb.rpc("get_leaderboard",{p_token:token});if(r.data&&!r.data.error)renderLb(r.data)}catch(e){}}
+function fillList(el,arr){el.innerHTML="";
+ if(!arr.length){var p=document.createElement("p");p.className="muted";p.textContent="Aucun point pour le moment.";el.appendChild(p);return}
+ arr.forEach(function(x){var row=document.createElement("div");row.className="rk"+(x.username===user?" me":"");
+  var pos=document.createElement("span");pos.className="pos";pos.textContent=x.rank===1?"🥇":x.rank===2?"🥈":x.rank===3?"🥉":"#"+x.rank;
+  var nm=document.createElement("span");nm.className="nm";nm.textContent=x.username+(x.username===user?" (toi)":"");
+  var pt=document.createElement("span");pt.className="badge";pt.textContent=x.points+" pts";
+  row.appendChild(pos);row.appendChild(nm);row.appendChild(pt);el.appendChild(row)})}
+function renderLb(d){
+ fillList($("lb-week"),d.week);fillList($("lb-season"),d.season);
+ var m=d.me||{};
+ $("me-week").textContent=(m.week_rank&&m.week_rank>20)?"Ta position cette semaine : #"+m.week_rank+" · "+m.week_points+" pts":(m.week_rank?"":"Tu n'as pas encore de points cette semaine.");
+ $("me-season").textContent=(m.season_rank&&m.season_rank>20)?"Ta position saison : #"+m.season_rank+" · "+m.season_points+" pts":(m.season_rank?"":"Tu n'as pas encore de points.");
+ var n=new Date();
+ $("lb-info").textContent="🔴 En direct · mis à jour à "+n.toLocaleTimeString("fr-FR")+" · la semaine se termine "+fmt(d.week_end)+" (remise à zéro du classement hebdomadaire)."}
+
+var sel2={},quiz=null,qEnd=0,qT=null,qDone=false,quizSt=null;
+function photo(n){var im=document.createElement("img"),ex=["jpg","jpeg","png","webp","JPG","JPEG","PNG","WEBP"],t=[],k=0;
+ ["eleve-"+n,String(n)].forEach(function(b){ex.forEach(function(e){t.push(b+"."+e)})});
+ im.src=t[0];im.alt="";im.onerror=function(){k++;if(k<t.length)im.src=t[k];else im.style.display="none"};return im}
+function multiBets(){return betData?betData.bets.filter(function(b){return b.id!=="semaine-1"}):[]}
+function renderBets2(){
+ if(!betData)return;var box=$("bets2-body");box.innerHTML="";
+ multiBets().forEach(function(b){var q=b.questions[0];if(!q)return;var st=stOf(b);lastSt[b.id]=st;
+  if(!(q.id in sel2))sel2[q.id]=(q.choices||[]).slice();var cur=sel2[q.id];
+  var w=document.createElement("div");w.style.margin="0 0 30px";
+  var h=document.createElement("h3");h.textContent=b.title+" — jusqu'à "+(b.max*q.pick_count)+" pts";w.appendChild(h);
+  var info=document.createElement("p");info.className="muted";info.id="b2info-"+b.id;info.style.margin="4px 0 10px";w.appendChild(info);
+  var lab=document.createElement("p");lab.className="ql";lab.textContent=q.label+" ("+q.pick_count+")";w.appendChild(lab);
+  var g=document.createElement("div");g.className="grid16";
+  q.options.forEach(function(name,i){var win=q.correct_multi&&q.correct_multi.indexOf(name)>=0;
+   var c=document.createElement("button");c.type="button";c.className="stu"+(cur.indexOf(name)>=0?" on":"")+(q.correct_multi?(win?" win":" lose"):"");c.disabled=st!=="open";
+   var pv=document.createElement("div");pv.className="pv";pv.setAttribute("data-b",b.id);pv.textContent="+"+val(b,srvNow())+" pts";if(st!=="open")pv.style.display="none";
+   var pic=document.createElement("div");pic.className="pic";var no=document.createElement("span");no.textContent=i+1;pic.appendChild(no);pic.appendChild(photo(i+1));
+   var nm=document.createElement("div");nm.className="sn";nm.textContent=(win?"🏆 ":"")+name;
+   c.appendChild(pv);c.appendChild(pic);c.appendChild(nm);
+   c.onclick=function(){var k=cur.indexOf(name);if(k>=0)cur.splice(k,1);else if(cur.length<q.pick_count)cur.push(name);else{$("b2msg-"+b.id).textContent="Tu as déjà choisi "+q.pick_count+" élève(s) : retires-en un d'abord.";return}renderBets2()};
+   g.appendChild(c)});
+  w.appendChild(g);
+  var ct=document.createElement("p");ct.className="muted";ct.style.margin="10px 0";ct.textContent=cur.length+"/"+q.pick_count+" choisi(s)";w.appendChild(ct);
+  if(st==="open"){var bt=document.createElement("button");bt.className="btn";bt.disabled=cur.length!==q.pick_count;bt.style.opacity=bt.disabled?".5":"1";bt.textContent=q.choices?"Modifier mon pari":"Valider mon pari";bt.onclick=function(){saveMulti(b,q)};w.appendChild(bt)}
+  var msg=document.createElement("p");msg.id="b2msg-"+b.id;msg.className="muted";msg.style.marginTop="8px";w.appendChild(msg);
+  var s2=document.createElement("p");s2.className="muted";
+  if(q.correct_multi){var n=(q.choices||[]).filter(function(x){return q.correct_multi.indexOf(x)>=0}).length;
+   s2.className="res"+(n>0?" ok":"");s2.textContent=n>0?"🎉 Félicitations, vous avez bien parié et gagné "+(q.awarded||n*val(b,new Date(q.picked_at)))+" points !":(q.choices?"Malheureusement vous avez perdu, tentez votre chance la prochaine fois.":"Vous n'avez pas participé à ce pari.")}
+  else if(q.choices){s2.textContent="Ton pari est enregistré : chaque bon choix vaut "+val(b,new Date(q.picked_at))+" pts."+(st==="open"?" Si tu le modifies maintenant, chaque bon choix vaudra "+val(b,srvNow())+" pts.":" (verrouillé)")}
+  else if(st==="closed")s2.textContent="Aucun pari enregistré.";
+  w.appendChild(s2);box.appendChild(w)})}
+async function saveMulti(b,q){var m=$("b2msg-"+b.id);
+ try{var r=await sb.rpc("save_picks",{p_token:token,p_question:q.id,p_choices:sel2[q.id]});
+  if(r.error||!r.data||r.data.error){m.textContent=(r.data&&r.data.error==="closed")?"Les votes sont clos.":"Erreur, réessaie.";return}
+  await loadBets();var m2=$("b2msg-"+b.id);if(m2)m2.textContent="✅ Pari enregistré !"}catch(e){m.textContent="Erreur, réessaie."}}
+function tick2(){multiBets().forEach(function(b){var st=stOf(b),el=$("b2info-"+b.id);if(!el)return;var v=val(b,srvNow());
+ document.querySelectorAll('.pv[data-b="'+b.id+'"]').forEach(function(p){var t="+"+v+" pts";if(p.textContent!==t)p.textContent=t});
+ if(st==="open"){var s=Math.max(0,Math.floor((new Date(b.closes_at)-srvNow())/1000)),d=Math.floor(s/86400),h=Math.floor(s%86400/3600),m=Math.floor(s%3600/60);
+  el.textContent="⏳ Fin des votes dans "+(d?d+" j ":"")+h+" h "+m+" min · Chaque bon choix vaut "+v+" pts maintenant, et cette valeur baisse avec le temps. Tu peux modifier jusqu'à la fin, mais le dernier enregistrement compte."}
+ else if(st==="soon")el.textContent="🔒 Bientôt disponible · ouverture "+fmt(b.opens_at)+"."
+ else el.textContent="Votes clos le "+fmt(b.closes_at)+". Les points seront ajoutés après la publication des résultats."})}
+function setDot(id,on){var e=$(id);if(e)e.className="dot"+(on?" on":"")}
+function updateDots(){setDot("dot-d",CH.some(function(c){return profile.completed.indexOf(c.id)<0}));
+ var p=false;if(betData)betData.bets.forEach(function(b){if(stOf(b)==="open"&&b.questions.some(function(q){return !(q.choice||q.choices)}))p=true});
+ setDot("dot-p",p);setDot("dot-q",!!(quizSt&&quizSt.ready&&quizSt.answered<quizSt.total))}
+async function refreshProfile(){try{var p=await sb.rpc("get_profile",{p_token:token});if(p.data&&!p.data.error){apply(p.data);render()}}catch(e){}}
+async function loadQuizStatus(){try{var r=await sb.rpc("quiz_status",{p_token:token,p_quiz:"semaine-2"});if(r.data&&!r.data.error)quizSt=r.data}catch(e){}}
+function qHead(box){var h=document.createElement("h2");h.textContent="❓ Questions de la semaine";box.appendChild(h)}
+async function loadQuiz(){var box=$("quiz-box");if(qT){clearInterval(qT);qT=null}
+ try{var r=await sb.rpc("quiz_get",{p_token:token,p_quiz:"semaine-2"});if(r.error||!r.data)throw 0;
+  if(r.data.error==="notready"){box.innerHTML="";qHead(box);var p=document.createElement("p");p.className="muted";p.textContent="🔒 Bientôt disponible.";box.appendChild(p);return}
+  if(r.data.error)throw 0;quiz=r.data;showQ()}catch(e){box.textContent="Erreur de chargement, réessaie."}}
+function showQ(){var box=$("quiz-box");box.innerHTML="";qHead(box);var qs=quiz.questions,tot=qs.length,cur=quiz.current;
+ if(!cur){var n=quiz.answers.filter(function(a){return a.correct}).length;
+  var s=document.createElement("div");s.className="res ok";s.style.margin="14px 0";s.textContent="🏁 Terminé ! Tu as "+n+"/"+tot+" bonnes réponses et gagné "+(n*quiz.points_each)+" points.";box.appendChild(s);
+  var p=document.createElement("p");p.className="muted";p.textContent="Ton évaluation est ajoutée à l'historique de tes points.";box.appendChild(p);refreshProfile();loadQuizStatus();return}
+ var q=qs[cur.idx],pr=document.createElement("p");pr.className="muted";pr.textContent="Question "+(cur.idx+1)+"/"+tot+" · "+quiz.points_each+" points par bonne réponse";box.appendChild(pr);
+ var bar=document.createElement("div");bar.className="tbar";var f=document.createElement("div");f.id="tfill";bar.appendChild(f);box.appendChild(bar);
+ var tl=document.createElement("p");tl.id="tleft";tl.className="muted";box.appendChild(tl);
+ var qt=document.createElement("h3");qt.textContent=q.q;qt.style.margin="10px 0";box.appendChild(qt);
+ var L="ABCD";q.options.forEach(function(o,i){var b=document.createElement("button");b.type="button";b.className="qopt";b.textContent=L[i]+". "+o;b.onclick=function(){answerQ(cur.idx,i)};box.appendChild(b)});
+ var res=document.createElement("p");res.id="qres";res.className="res";res.style.display="none";box.appendChild(res);
+ var nx=document.createElement("button");nx.className="btn";nx.id="qnext";nx.style.cssText="display:none;margin-left:8px";nx.textContent=cur.idx+1<tot?"Prochaine question":"Voir mon résultat";nx.onclick=loadQuiz;box.appendChild(nx);
+ qDone=false;qEnd=Date.now()+cur.remaining*1000;
+ qT=setInterval(function(){var left=Math.max(0,(qEnd-Date.now())/1000);$("tfill").style.width=(left/quiz.seconds*100)+"%";$("tleft").textContent="⏱ "+Math.ceil(left)+" s";if(left<=0&&!qDone)answerQ(cur.idx,-1)},200)}
+async function answerQ(idx,choice){if(qDone)return;qDone=true;if(qT){clearInterval(qT);qT=null}
+ var btns=document.querySelectorAll(".qopt");btns.forEach(function(b){b.disabled=true});
+ try{var r=await sb.rpc("quiz_answer",{p_token:token,p_quiz:"semaine-2",p_idx:idx,p_choice:choice});if(r.error||!r.data||r.data.error)throw 0;
+  if(btns[r.data.right])btns[r.data.right].className="qopt good";
+  if(choice>=0&&!r.data.correct&&btns[choice])btns[choice].className="qopt bad";
+  var res=$("qres");res.style.display="inline-block";res.className="res"+(r.data.correct?" ok":"");
+  res.textContent=r.data.correct?"✅ Bonne réponse ! +"+quiz.points_each+" points":(choice<0?"⏰ Temps écoulé · 0 point":"❌ Mauvaise réponse · 0 point");
+  $("qnext").style.display="inline-block";loadQuizStatus()}catch(e){var x=$("qres");x.style.display="inline-block";x.textContent="Erreur : recharge la page.";}}
+</script>
+</body>
+</html>
